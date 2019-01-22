@@ -37,7 +37,7 @@ primitive FileCopy
 primitive Environ
   fun apply(env: Env): Map[String val, String val] val =>
     let map = recover trn Map[String val, String val] end
-    for kv in env.vars().values() do
+    for kv in env.vars.values() do
       let splitted = kv.split_by("=")
       try
         map(splitted(0)?) = splitted(1)?
@@ -87,7 +87,7 @@ actor Main
           return
         end
       let cmd =
-        match CommandParser(cs).parse(env.args, env.vars())
+        match CommandParser(cs).parse(env.args, env.vars)
         | let c: Command => c
         | let ch: CommandHelp =>
           ch.print_help(env.out)
@@ -209,7 +209,7 @@ actor Main
               resulting_binary_path,
               recover
               Array[String](1).>push(Path.base(resulting_binary_path.path)) end,
-              env.vars())
+              env.vars)
             ppm.done_writing()
 
         end
@@ -226,7 +226,7 @@ actor Main
         consume notifier,
         ponyc,
         consume args,
-        env.vars())
+        env.vars)
       pm.done_writing()
     else
       env.err.print("some unspecific error happened!")
